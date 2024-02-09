@@ -18,6 +18,11 @@ from text_normalizer import normalize_text
 
 load_dotenv(find_dotenv())
 
+import logging
+logging.basicConfig(
+    format="%(asctime)s - %(module)s - %(message)s", datefmt="%d-%b-%y %H:%M:%S", level=logging.WARN
+)
+
 # Load Env Variables
 LLM_TYPE = os.getenv("LLM_TYPE")
 ES_INDEX = os.getenv("ES_INDEX")
@@ -117,9 +122,6 @@ def chatbot(req: func.HttpRequest) -> func.HttpResponse:
 
             OpenAIoutput=GeneratedResponse(messages,is_stream=False)
             LOG.info('OpenAI Results::\n\t{0}'.format(str(OpenAIoutput)))
-
-            # LOG.info('OpenAI Results::\n\tcontent:::\t{0}\n\tPrompt Tokens:::\t{1}\n\tOutput Tokens:::\t{2}'.format(OpenAIoutput['content'], OpenAIoutput['prompt_tokens'], OpenAIoutput['output_tokens']))
-            #print(response)
 
             ai_response={
                             'output': OpenAIoutput['content'], 
