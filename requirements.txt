@@ -10,8 +10,6 @@ pip-tools==7.3.0
 elasticsearch==8.12.0
 langchain==0.1.4
 tiktoken==0.5.2
-flask==3.0.1
-flask-cors==4.0.0
 python-dotenv==1.0.1
 
 # OpenAI dependencies
