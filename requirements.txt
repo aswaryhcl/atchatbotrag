@@ -3,3 +3,14 @@
 # Manually managing azure-functions-worker may cause unexpected issues
 
 azure-functions
+# package management
+pip-tools==7.3.0
+
+# core dependencies
+elasticsearch==8.12.0
+langchain==0.1.4
+tiktoken==0.5.2
+python-dotenv==1.0.1
+
+# OpenAI dependencies
+openai==1.10.0
