@@ -46,7 +46,7 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 def chatbot(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    input = req.get_body()
+    input = json.loads(req.get_body())
     
 
     if input:
