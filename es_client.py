@@ -1,10 +1,11 @@
 from elasticsearch import Elasticsearch
 import requests
 import json, os, traceback
-from dotenv import load_dotenv, find_dotenv
-from logger import LOG, handle_error
 
-load_dotenv(find_dotenv())
+import logging
+logging.basicConfig(
+    format="%(asctime)s - %(module)s - %(message)s", datefmt="%d-%b-%y %H:%M:%S", level=logging.WARN
+)
 
 
 ELASTIC_CLOUD_ID = os.getenv("ELASTIC_CLOUD_ID")
@@ -20,13 +21,13 @@ def ES_Client():
             cloud_id=ELASTIC_CLOUD_ID, api_key=ELASTIC_API_KEY
             )
 
-        print('\n#############################################################\n')
-        print('Connected to ElasticSearch:\n Instance: {0}\n Cluster: {1}' \
+        logging('\n#############################################################\n')
+        logging('Connected to ElasticSearch:\n Instance: {0}\n Cluster: {1}' \
             .format(ElasticSearch_client.info()['name'], ElasticSearch_client.info()['cluster_name']))
-        print('\n#############################################################\n')
+        logging('\n#############################################################\n')
         return ElasticSearch_client
     except Exception as e:
-        LOG.error(traceback.format_exc())
+        logging.error(traceback.format_exc())
 
 
 def textExpansion_Search(input_query, ES_INDEX=ES_INDEX, size=3):
@@ -47,13 +48,13 @@ def textExpansion_Search(input_query, ES_INDEX=ES_INDEX, size=3):
         return response
 
     except Exception as e:
-        LOG.error(traceback.format_exc())
+        logging.error(traceback.format_exc())
 
 
 
 def RetrieveESresults(input_query, ES_INDEX, top_n_results):
     response = textExpansion_Search(input_query, ES_INDEX,top_n_results)
-    LOG.info('textExpansion_Search Result:\n{0}'.format(str(textExpansion_Search)))
+    logging.info('textExpansion_Search Result:\n{0}'.format(str(textExpansion_Search)))
 
     search_results_list=[]
     try:

@@ -5,18 +5,15 @@ from openai import AzureOpenAI
 import requests
 import json, os
 import traceback
-from dotenv import load_dotenv, find_dotenv
 from elasticsearch import Elasticsearch
 from langchain.memory import ElasticsearchChatMessageHistory
 # from langchain.vectorstores import ElasticsearchStore
 from langchain_community.vectorstores import ElasticsearchStore
-from logger import LOG, handle_error
 from es_client import ES_Client, textExpansion_Search, RetrieveESresults
 from llm import AzureOpenAi_Client, ChatCompletion, ChatCompletionStream, GeneratedResponse
 from text_normalizer import normalize_text
 
 
-load_dotenv(find_dotenv())
 
 import logging
 logging.basicConfig(
@@ -28,7 +25,7 @@ LLM_TYPE = os.getenv("LLM_TYPE")
 ES_INDEX = os.getenv("ES_INDEX")
 top_n_results=os.getenv("top_n_results")
 
-print('LLM_TYPE: {0}'.format(LLM_TYPE))
+logging.info('LLM_TYPE: {0}'.format(LLM_TYPE))
 streaming=False
 
 # print in color
@@ -43,8 +40,7 @@ system_prompt="-- You are an AI assistant which answers user's questions in a co
 
 messages = [{ "role": "system", "content": system_prompt }]
 
-
-app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
 @app.route(route="chatbot")
 def chatbot(req: func.HttpRequest) -> func.HttpResponse:
@@ -84,7 +80,7 @@ def chatbot(req: func.HttpRequest) -> func.HttpResponse:
             "content": question+'. And do not ignore URLs in the context. Also if the response contains a list then print each item in new line.'
                 }
 
-            print('User Question Prompt:\n{0}'.format(user_prompt['content']))
+            logging.info('User Question Prompt:\n{0}'.format(user_prompt['content']))
 
             messages.append(user_prompt)
 
@@ -114,14 +110,14 @@ def chatbot(req: func.HttpRequest) -> func.HttpResponse:
                 'content': output_answer
                 }
 
-            print('ES semantic Search Result:\n{0}'.format(Assistant_Content['content']))
+            logging.info('ES semantic Search Result:\n{0}'.format(Assistant_Content['content']))
 
             messages.append(Assistant_Content)
 
-            print(messages)
+            logging.info(messages)
 
             OpenAIoutput=GeneratedResponse(messages,is_stream=False)
-            LOG.info('OpenAI Results::\n\t{0}'.format(str(OpenAIoutput)))
+            logging.info('OpenAI Results::\n\t{0}'.format(str(OpenAIoutput)))
 
             ai_response={
                             'output': OpenAIoutput['content'], 

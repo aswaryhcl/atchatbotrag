@@ -2,11 +2,12 @@ import openai
 from openai import AzureOpenAI
 import requests
 import json, os, traceback
-from dotenv import load_dotenv, find_dotenv
-from logger import LOG, handle_error
 
 
-load_dotenv(find_dotenv())
+import logging
+logging.basicConfig(
+    format="%(asctime)s - %(module)s - %(message)s", datefmt="%d-%b-%y %H:%M:%S", level=logging.WARN
+)
 
 
 OPENAI_VERSION = os.getenv("OPENAI_VERSION")
@@ -27,14 +28,14 @@ def AzureOpenAi_Client():
             api_version = OPENAI_VERSION,
             default_headers = headers
             )
-        LOG.info('\n#############################################################\n')
-        LOG.info('Connected to Azure OpenAI:\n Instance: {0}'.format(AzureOpenAIclient))
-        LOG.info('\n#############################################################\n')
+        logging.info('\n#############################################################\n')
+        logging.info('Connected to Azure OpenAI:\n Instance: {0}'.format(AzureOpenAIclient))
+        logging.info('\n#############################################################\n')
 
         return AzureOpenAIclient
     
     except Exception as e:
-        LOG.error(traceback.format_exc())
+        logging.error(traceback.format_exc())
 
 
 
@@ -45,14 +46,14 @@ def ChatCompletion(messages):
             messages=messages,
             temperature=0
         )
-        LOG.info('\n############## response Started ################ \n')
-        LOG.info(response)
-        LOG.info('\n############## response Complete ################ \n')
+        logging.info('\n############## response Started ################ \n')
+        logging.info(response)
+        logging.info('\n############## response Complete ################ \n')
 
         return response
 
     except Exception as e:
-        LOG.error(e)
+        logging.error(e)
 
 
 def ChatCompletionStream(messages):
@@ -75,7 +76,7 @@ def ChatCompletionStream(messages):
         return collected_messages
 
     except Exception as e:
-        LOG.error(traceback.format_exc())
+        logging.error(traceback.format_exc())
 
 
 
@@ -126,7 +127,7 @@ def GeneratedResponse(messages, is_stream=False):
             OpenAiResponse['output_tokens'] = response.usage.completion_tokens
             return OpenAiResponse
     except Exception as e:
-        LOG.error(traceback.format_exc())
+        logging.error(traceback.format_exc())
 
 # Langchain retriever
 '''
