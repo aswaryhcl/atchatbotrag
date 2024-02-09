@@ -77,7 +77,7 @@ def chatbot(req: func.HttpRequest) -> func.HttpResponse:
         
             user_prompt = {
             "role": "user",
-            "content": question+'. And do not ignore URLs in the context. Also if the response contains a list then print each item in new line.'
+            "content": question+'. provide the http or https URLs that are received in assistant content. Also if the response contains a list then print each item in new line. Also encourage to raise a service request if the answer is unsatisfactory'
                 }
 
             logging.info('User Question Prompt:\n{0}'.format(user_prompt['content']))
@@ -99,7 +99,7 @@ def chatbot(req: func.HttpRequest) -> func.HttpResponse:
                 output_answer=normalize_text(final_result_set['top_answer'])
                 #print(output_answer)
             else:
-                output_answer='Greet the user. Ask the user how can you assist them with anything related to SNOW'
+                output_answer='-- Greet the user. ask the user if you can assist with anything'
                 messages[1]['content']=''
                 final_result_set['top_source']=None
                 final_result_set['top_score']=None
