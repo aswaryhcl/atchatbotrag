@@ -40,7 +40,7 @@ system_prompt="-- You are an AI assistant which answers user's questions in a co
 
 messages = [{ "role": "system", "content": system_prompt }]
 
-app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
 @app.route(route="chatbot")
 def chatbot(req: func.HttpRequest) -> func.HttpResponse:
